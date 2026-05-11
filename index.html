@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Pembelajaran Interaktif</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: #eef5ff;
+      color: #1e293b;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, #2563eb, #1e40af);
+      color: white;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav h1 {
+      font-size: 24px;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #bfdbfe;
+    }
+
+    .quiz-btn {
+      background: white;
+      color: #1d4ed8;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .quiz-btn:hover {
+      transform: scale(1.05);
+      background: #dbeafe;
+    }
+
+    marquee {
+      background: #1d4ed8;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    section {
+      padding: 60px 10%;
+      animation: fadeIn 1s ease;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      margin-top: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    h2 {
+      color: #1d4ed8;
+      margin-bottom: 15px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .stat-box {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+    }
+
+    .progress-container {
+      background: #cbd5e1;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 15px;
+    }
+
+    .progress-bar {
+      width: 75%;
+      background: #2563eb;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .quiz-container {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 700px;
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 9999;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+    }
+
+    .question {
+      margin: 20px 0;
+    }
+
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+      transform: scale(1.03);
+    }
+
+    .clock {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    #topBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1d4ed8;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      font-size: 18px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    footer {
+      background: #1e3a8a;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 30px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media(max-width:768px){
+      nav {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      section {
+        padding: 40px 5%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <h1>📚 EduSmart Learning</h1>
+    <ul>
+      <li><a href="#home">Beranda</a></li>
+      <li><a href="#english">Bahasa Inggris</a></li>
+      <li><a href="#ppkn">PPKN</a></li>
+    </ul>
+    <button class="quiz-btn" onclick="openQuiz()">🎮 Kuis</button>
+  </nav>
+  <div class="clock" id="clock"></div>
+</header>
+
+<marquee>🌟 Selamat datang di Website Pembelajaran Interaktif! Semangat belajar dan raih prestasi terbaikmu! 🚀</marquee>
+
+<section id="home">
+  <h2>🏠 Beranda</h2>
+
+  <div class="card">
+    <p>Website ini dibuat untuk membantu siswa belajar Bahasa Inggris dan PPKN dengan cara yang modern, menarik, dan interaktif. 📖✨</p>
+  </div>
+
+  <div class="card">
+    <h3>👨‍🎓 Identitas Pembuat</h3>
+    <p>Nama: Almarzuq Ramadhan </p>
+     </div>
+
+  <div class="stats">
+    <div class="stat-box">
+      <h3>📘 2 Materi</h3>
+      <p>Bahasa Inggris & PPKN</p>
+    </div>
+
+    <div class="stat-box">
+      <h3>❓ 20 Soal</h3>
+      <p>Kuis Interaktif</p>
+    </div>
+
+    <div class="stat-box">
+      <h3>💻 Responsive</h3>
+      <p>HP & Laptop</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📈 Progress Belajar</h3>
+    <div class="progress-container">
+      <div class="progress-bar">75%</div>
+    </div>
+  </div>
+</section>
+
+<section id="english">
+  <h2>📘 Materi Bahasa Inggris - Recount Text</h2>
+
+  <div class="card">
+    <h3>📖 Pengertian</h3>
+    <p>Recount Text adalah teks yang menceritakan kembali pengalaman atau kejadian yang telah terjadi di masa lalu.</p>
+  </div>
+
+  <div class="card">
+    <h3>🎯 Tujuan</h3>
+    <p>Tujuan Recount Text adalah untuk memberikan informasi atau menghibur pembaca melalui cerita pengalaman masa lalu.</p>
+  </div>
+
+  <div class="card">
+    <h3>🧩 Struktur</h3>
+    <ul>
+      <li><b>Orientation</b> → pengenalan cerita</li>
+      <li><b>Events</b> → rangkaian kejadian</li>
+      <li><b>Reorientation</b> → penutup cerita</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>✍️ Contoh Recount Text</h3>
+    <p><b>Last Holiday</b><br><br>
+    Last holiday, I went to Bandung with my family. We visited many beautiful places and took lots of pictures. I was very happy because it was a fun experience.</p>
+  </div>
+</section>
+
+<section id="ppkn">
+  <h2>🏛️ Materi PPKN</h2>
+
+  <div class="card">
+    <h3>📜 Pengertian Pancasila</h3>
+    <p>Pancasila adalah dasar negara Indonesia yang menjadi pedoman hidup bangsa Indonesia.</p>
+  </div>
+
+  <div class="card">
+    <h3>⭐ 5 Sila Pancasila</h3>
+    <ol>
+      <li>Ketuhanan Yang Maha Esa</li>
+      <li>Kemanusiaan yang Adil dan Beradab</li>
+      <li>Persatuan Indonesia</li>
+      <li>Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan dalam Permusyawaratan/Perwakilan</li>
+      <li>Keadilan Sosial bagi Seluruh Rakyat Indonesia</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>🤝 Penerapan dalam Kehidupan</h3>
+    <ul>
+      <li>Beribadah sesuai agama masing-masing 🙏</li>
+      <li>Menolong teman yang kesulitan 🤝</li>
+      <li>Menjaga persatuan dan tidak bertengkar 🇮🇩</li>
+      <li>Musyawarah saat mengambil keputusan 🗣️</li>
+      <li>Bersikap adil kepada semua orang ⚖️</li>
+    </ul>
+  </div>
+</section>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="quiz-container" id="quizContainer">
+  <h2>🎮 Kuis Interaktif</h2>
+
+  <label><b>Pilih Kuis:</b></label>
+  <select id="quizType">
+    <option value="english">Bahasa Inggris</option>
+    <option value="ppkn">PPKN</option>
+  </select>
+
+  <div id="quizQuestions"></div>
+
+  <button onclick="submitQuiz()">📊 Lihat Skor</button>
+  <button onclick="closeQuiz()">❌ Tutup</button>
+
+  <h3 id="score"></h3>
+</div>
+
+<button id="topBtn" onclick="topFunction()">⬆️</button>
+
+<footer>
+  <p>✨ Website Pembelajaran Interaktif | Kelas 8 ✨</p>
+</footer>
+
+<script>
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').innerHTML = '🕒 ' + now.toLocaleTimeString('id-ID');
+  }
+  setInterval(updateClock, 1000);
+
+  const topBtn = document.getElementById('topBtn');
+
+  window.onscroll = function() {
+    if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+      topBtn.style.display = 'block';
+    } else {
+      topBtn.style.display = 'none';
+    }
+  };
+
+  function topFunction() {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  const englishQuiz = [
+    ['What is Recount Text?', ['Text about future', 'Text about past events', 'Text about procedure'], 1],
+    ['Purpose of Recount Text?', ['Entertain and inform', 'Describe animal', 'Give instructions'], 0],
+    ['What is Orientation?', ['Ending story', 'Beginning story', 'Problem'], 1],
+    ['Events contain?', ['Series of events', 'Moral value', 'Title'], 0],
+    ['Reorientation means?', ['Closing', 'Opening', 'Question'], 0],
+    ['Recount Text uses tense?', ['Past tense', 'Future tense', 'Present tense'], 0],
+    ['Example of past tense?', ['Go', 'Went', 'Going'], 1],
+    ['"Yesterday I visited Bali" is?', ['Recount sentence', 'Command', 'Question'], 0],
+    ['Recount Text tells?', ['Past experiences', 'Dreams', 'Recipes'], 0],
+    ['Generic structure?', ['Orientation, Events, Reorientation', 'Goal, Material, Step', 'Identification, Description'], 0]
+  ];
+
+  const ppknQuiz = [
+    ['What is the foundation of Indonesia?', ['Pancasila', 'UUD', 'Bendera'], 0],
+    ['How many sila in Pancasila?', ['3', '5', '7'], 1],
+    ['First sila is?', ['Persatuan Indonesia', 'Ketuhanan Yang Maha Esa', 'Keadilan Sosial'], 1],
+    ['Helping friends is implementation of?', ['Kemanusiaan', 'Persatuan', 'Kerakyatan'], 0],
+    ['National unity means?', ['Persatuan Indonesia', 'Musyawarah', 'Keadilan'], 0],
+    ['Symbol of 5th sila?', ['Star', 'Rice and cotton', 'Bull'], 1],
+    ['Musyawarah belongs to sila?', ['2nd', '4th', '5th'], 1],
+    ['Being fair is implementation of?', ['5th sila', '1st sila', '2nd sila'], 0],
+    ['Pancasila is?', ['National ideology', 'Song', 'Law'], 0],
+    ['Respecting religion means?', ['1st sila', '2nd sila', '4th sila'], 0]
+  ];
+
+  function openQuiz() {
+    document.getElementById('quizContainer').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+    loadQuiz();
+  }
+
+  function closeQuiz() {
+    document.getElementById('quizContainer').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+  }
+
+  document.getElementById('quizType').addEventListener('change', loadQuiz);
+
+  function loadQuiz() {
+    const type = document.getElementById('quizType').value;
+    const quizData = type === 'english' ? englishQuiz : ppknQuiz;
+
+    let html = '';
+
+    quizData.forEach((q, index) => {
+      html += `
+        <div class="question">
+          <p><b>${index + 1}. ${q[0]}</b></p>
+          ${q[1].map((opt, i) => `
+            <label>
+              <input type="radio" name="q${index}" value="${i}">
+              ${opt}
+            </label><br>
+          `).join('')}
+        </div>
+      `;
+    });
+
+    document.getElementById('quizQuestions').innerHTML = html;
+    document.getElementById('score').innerHTML = '';
+  }
+
+  function submitQuiz() {
+    const type = document.getElementById('quizType').value;
+    const quizData = type === 'english' ? englishQuiz : ppknQuiz;
+
+    let score = 0;
+
+    quizData.forEach((q, index) => {
+      const answer = document.querySelector(`input[name="q${index}"]:checked`);
+      if(answer && parseInt(answer.value) === q[2]) {
+        score++;
+      }
+    });
+
+    document.getElementById('score').innerHTML = `🏆 Skor Kamu: ${score} / ${quizData.length}`;
+  }
+</script>
+
+</body>
+</html>
